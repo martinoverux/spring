@@ -1,7 +1,9 @@
 package com.kh.spring.demo.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,8 +60,29 @@ import com.kh.spring.demo.model.service.DemoService;
 * MultipartFile : 업로드파일 처리 인터페이스. CommonsMultipartFile
 * RedirectAttributes : DML처리후 요청주소 변경을 위한 redirect시 속성처리 지원
  * 
- * @author verax
- *
+ * 
+ * 
+ * 모델 
+ * - view단에서 처리할 데이터저장소
+ * - Map 객체
+ * 
+ * - ModelAndView 클래스 : model + view
+ * 		- 속성 addObject(String, Object)
+ * 		- 뷰 setViewName(String)
+ * 
+ * - ModelMap 클래스 : model
+ * 		- 속성 addAttribute(String, Object)
+ * 		- 뷰 별도의 String 반환
+ * - Model 인터페이스
+ * 		- 속성 addAttribute(String, Object)
+ * 		- 뷰 별도의 String 반환
+ * 
+ * 
+ * @ModelAttribute method 레벨
+ * 		- 특정 @Controller 하위에서 모든 요청에 대한 공통속성을 정의
+ * @ModelAttribute parameter 레벨 
+ * 		- 특정 모델 속성에 대한 getter
+ *		- name과 일치하는 속성이 없다면 새로운 속성으로 등록. (Command 객체는 암묵적 Model속성으로 등록)
  */
 @Controller
 @RequestMapping("/demo")
@@ -68,6 +92,16 @@ public class DemoController {
 	
 	@Autowired
 	private DemoService demoService;
+	
+	@ModelAttribute("common")
+	public Map<String, Object> common(){
+		log.info("common 호출!");
+		Map<String, Object> map  = new HashMap<>();
+		map.put("adminEmail", "admin@kh.or.kr");
+		map.put("adminPhone", "070-123-4567");
+		return map;
+	}
+	
 	
 	/**
 	 * 전송방식 GET(기본값)
@@ -121,7 +155,7 @@ public class DemoController {
 	 * @return
 	 */
 	@RequestMapping("/dev3.do")
-	public String dev3(Dev dev) {
+	public String dev3(@ModelAttribute("dev") Dev dev) {
 		log.info("dev = {}", dev);
 		return "demo/devResult";
 	}
