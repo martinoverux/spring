@@ -87,11 +87,11 @@ public class MemberController {
 
 	@GetMapping("/memberLogin.do")
 	public void memberLogin(
-			@RequestHeader(name = "Referer", required = false) String referer,
+			@RequestHeader(name = "Referer", required = false) String referer, String next,
 			Model model) {
 		log.info("referer = {}", referer);
 		
-		if(referer != null)
+		if(next == null && referer != null)
 			model.addAttribute("next", referer);
 		
 	}
