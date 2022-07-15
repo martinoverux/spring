@@ -16,19 +16,87 @@
 	
 	<insert id="insertBoard">
 		insert into 
-			board
+			board 
 		values(
 			seq_board_no.nextval, 
 			#{title}, 
 			#{memberId}, 
-			#{content}, 
-			default, 
+			#{content},
+			default,
 			null,
-			default
+			default 
 		) 
+		<selectKey keyProperty="no" resultType="_int" order="AFTER"  >
+			select
+				seq_board_no.currval
+			from 
+				dual
+		</selectKey>
 	</insert>
 	
-	 
-  
- 
+	<select id="selectABoard" resultType="board">
+		select 
+			b.*
+		from
+			board b
+		where
+			no = #{no}
+	</select>
+	
+	<select id="selectABoardCollection" resultMap="boardCollectionMap">
+		select 
+			b.*,
+			m.*,
+			a.no attach_no,
+			a.* 
+		from 
+			board b 
+				left join 
+					member m on b.member_id = m.member_id 
+				left join 
+					attachment a on b.no = a.board_no  
+		where 
+			b.no = #{no} 
+		order by 
+			b.no desc
+	</select>
+    <resultMap type="board" id="boardCollectionMap">
+    	<id column="no" property="no"/>
+    	<result column="title" property="title"/>
+    	<result column="member_id" property="memberId"/>
+    	<result column="content" property="content"/>
+    	<result column="created_at" property="createdAt"/>
+    	<result column="updated_at" property="updatedAt"/>
+    	<result column="read_count" property="readCount"/>
+    	
+    	<association property="member" javaType="member">
+    		<id column="member_id" property="memberId"/>
+    		<result column="name" property="name"></result>
+    		<result column="email" property="email"></result>
+    	</association>
+    	
+    	<collection property="attachments" javaType="arraylist" ofType="attachment">
+    		<id column="attach_no" property="no"/>
+    		<result column="original_filename" property="originalFilename" />
+    		<result column="renamed_filename" property="renamedFilename" />
+    		<result column="download_count" property="downloadCount" />    		
+    	</collection>
+    </resultMap>
+    
+    <update id="updateBoard">
+    	update 
+    		board
+    	 <set>
+    	 	 <if test="title != null">
+	    	 	title = #{title}, 
+    	 	 </if>
+    	 	 <if test="content != null">
+	    		 content = #{content}, 
+    	 	 </if>
+	    	 	updated_at = sysdate 
+    	 </set> 
+    	 where 
+    	 	no = #{no}
+    </update>
+ 	
 </mapper>

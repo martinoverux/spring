@@ -35,7 +35,8 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 				
-		<!-- #11.AOP 처리를 위한 의존 -->
+		<!-- #11. AOP 처리를 위한 의존 -->
+		<!-- #13. 트랜잭션 처리를 위한 aop 의존 -->
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>

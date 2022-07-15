@@ -218,9 +218,11 @@ where
 
 -- rowbounds 객체 이용 시
 select * from board order by no desc;
-
+select * from attachment;
 select count(*) from attachment where board_no = 60;
-		
+
+delete from board where no = 82;
+commit;
         
 select 
 			b.*,
@@ -230,3 +232,5 @@ from
 order by 
 			no desc;
 
+-- 조인 board + member + attachment
+select * from board b left join member m on b.member_id = m.member_id left join attachment a on b.no = a.board_no  where b.no = 60 order by b.no desc; 
