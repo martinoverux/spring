@@ -38,4 +38,15 @@ public class DemoDaoImpl implements DemoDao {
 	public int updateDev(Dev dev) {
 		return sqlSession.update("demo.updateDev", dev);
 	}
+
+	@Override
+	public Dev selectOneByEmail(String email) {
+		return sqlSession.selectOne("demo.selectOneByEmail", email) ;
+	}
+
+	@Override
+	public List<Dev> selectListByLang(String language) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

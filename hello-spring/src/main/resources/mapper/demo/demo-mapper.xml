@@ -44,6 +44,25 @@
 			no = #{no}
 	</select>
 	
+	<select id="selectOneByEmail" resultMap="devMap">
+		select
+			*
+		from
+			dev
+		where
+			email = #{email}
+	</select>
+	
+	<select id="selectListByLang" resultType="dev">
+		select
+			*
+		from
+			dev
+		where
+			lang like '%'||#{language}||'%'
+	</select>
+	
+	
 	<update id="updateDev">
 		update
 			dev
@@ -67,4 +86,6 @@
 		where
 			no = #{no}
 	</update>
+	
+	
 </mapper>

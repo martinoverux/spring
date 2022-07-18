@@ -16,6 +16,10 @@ public interface DemoService {
 
 	int updateDev(Dev dev);
 
+	Dev selectOneByEmail(String email);
+
+	List<Dev> selectListByLang(String language);
+
 
 
 }

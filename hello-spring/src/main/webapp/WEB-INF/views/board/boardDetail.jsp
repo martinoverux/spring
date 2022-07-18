@@ -16,7 +16,7 @@ div#board-container label.custom-file-label{text-align:left;}
 <div id="board-container" class="mx-auto text-center">
 	<input type="text" class="form-control" 
 		   placeholder="제목" name="boardTitle" id="title" 
-		   value="${board.title}" required>
+		   value="${board.title}" required readonly>
 	<input type="text"  class="form-control" value="${board.member.name} ${board.member.email}" readonly />
 	<input type="text" class="form-control" 
 		   name="memberId" 
@@ -25,7 +25,7 @@ div#board-container label.custom-file-label{text-align:left;}
 	<%-- <c:if test="${board.attachCount gt 0}"> --%>
 	<c:if test="${not empty board.attachments}">
 		<c:forEach items="${board.attachments}" var="attach" varStatus="vs" >
-			<button type="button" class="btn btn-outline-success btn-block">
+			<button type="button" class="btn btn-outline-success btn-block attach" value="${attach.no}">
 				<%-- <img alt="첨부파일" src="${pageContext.request.contextPath}/resources/upload/board/${attach.renamedFilename}" width=16px> --%>
 				첨부파일${vs.count} - ${attach.originalFilename}
 			</button>
@@ -33,14 +33,24 @@ div#board-container label.custom-file-label{text-align:left;}
 	</c:if>
 	
     <textarea class="form-control" name="content" 
-    		  placeholder="내용" required>${board.content}</textarea>
+    		  placeholder="내용" required readonly>${board.content}</textarea>
     <input type="number" class="form-control" name="readCount" title="조회수"
 		   value="${board.readCount}" readonly>
 	<input type="datetime-local" class="form-control" name="created_at" 
-		   value='${board.createdAt}'>
+		   value='${board.createdAt}' readonly>
 	<c:if test="${not empty loginMember && loginMember.memberId eq board.memberId}">
 		<button type="button" class="btn btn-outline-primary btn-block" onclick="location.href='${pageContext.request.contextPath}/board/boardUpdate.do?no=${board.no}';">수정</button>
 		<button type="button" class="btn btn-outline-primary btn-block" onclick="location.href='${pageContext.request.contextPath}/board/boardDelete.do?no=${board.no}';">삭제</button>
 	</c:if>
 </div>
+<script>
+document.querySelectorAll(".attach").forEach((btn) => {
+	btn.addEventListener("click", (e) => {
+		const attachNo = e.target.value;
+		console.log(attachNo);
+		location.href = `${pageContext.request.contextPath}/board/fileDownload.do?no=` + attachNo;
+	});
+});
+	
+	</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

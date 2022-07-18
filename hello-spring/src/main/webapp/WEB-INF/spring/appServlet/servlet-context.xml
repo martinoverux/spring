@@ -14,6 +14,18 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 
+	<!-- #15.1. jacksonMessageConverter 빈 -->
+	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" ></beans:bean>
+	
+	<!-- #15.2. @ResponseBody 처리를 위한 MessageConverter 등록 -->
+	<!-- spring 5.x에 와서 생략 가능. annotation-driven에 의해 처리 -->
+	<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<beans:property name="messageConverters" >
+			<beans:list>
+				<beans:ref bean="jacksonMessageConverter"/>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 
@@ -21,6 +33,16 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- #14.1. jsonView빈 등록 -->
+	<beans:bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView">
+		<beans:property name="contentType" value="application/json; charset=utf-8" />
+	</beans:bean>
+	
+	<!-- #14.2. BeanNameViewResolver 등록  -->
+	<beans:bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<beans:property name="order" value="1" /> <!-- InternalResourceViewResolver보다 우선처리 -->
 	</beans:bean>
 	
 	<context:component-scan base-package="com.kh.spring" />
@@ -37,6 +59,9 @@
 			<exclude-mapping path="/board/boardList.do"/>
 			<exclude-mapping path="/board/boardDetail.do"/>
 			<exclude-mapping path="/member/memberLogin.do"/>
+			<exclude-mapping path="/member/memberLogout.do"/>
+			<exclude-mapping path="/member/memberEnroll.do"/>
+			<exclude-mapping path="/member/checkIdDuplicate.do"/>
 			<beans:bean class="com.kh.spring.common.interceptor.LoginInterceptor" />
 		</interceptor>
 	</interceptors>

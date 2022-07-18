@@ -47,5 +47,15 @@ public class DemoServiceImpl implements DemoService {
 		return demoDao.updateDev(dev);
 	}
 
+	@Override
+	public Dev selectOneByEmail(String email) {
+		return demoDao.selectOneByEmail(email);
+	}
+
+	@Override
+	public List<Dev> selectListByLang(String language) {
+		return demoDao.selectListByLang(language);
+	}
+
 
 }
