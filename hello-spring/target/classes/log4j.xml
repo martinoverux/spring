@@ -45,7 +45,7 @@
 	
 	<!-- Application Loggers -->
 	<!-- 로그 수집 -->
-	<logger name="com.kh.spring" additivity="true">
+	<logger name="com.kh" additivity="true">
 		<level value="debug" />
 	</logger>
 	

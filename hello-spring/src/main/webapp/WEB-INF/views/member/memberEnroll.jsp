@@ -3,13 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="회원등록" name="title"/>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="" method="POST">
+	<form:form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto">
 			<tr>
 				<th>아이디</th>
@@ -96,7 +97,7 @@
 		</table>
 		<input type="submit" value="가입" >
 		<input type="reset" value="취소">
-	</form>
+	</form:form>
 </div>
 
 <script>

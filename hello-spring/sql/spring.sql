@@ -234,3 +234,34 @@ order by
 
 -- 조인 board + member + attachment
 select * from board b left join member m on b.member_id = m.member_id left join attachment a on b.no = a.board_no  where b.no = 60 order by b.no desc; 
+
+
+-- spring security 관련 authority 테이블 생성
+create table authority (
+    member_id varchar2(20),
+    auth varchar2(50),
+    constraint pk_authority primary key(member_id, auth),
+    constraint fk_authority_member_id foreign key(member_id) references member(member_id) on delete cascade
+);
+
+select * from member;
+
+insert into authority values ('abcde', 'ROLE_USER');
+insert into authority values ('qwerty', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_ADMIN');
+insert into authority values ('honggd', 'ROLE_USER');
+insert into authority values ('sinsa', 'ROLE_USER');
+
+select * from authority;
+
+update authority set auth = 'ROLE_USER' where member_id = 'mrjeon';
+commit;
+
+select
+    *
+from
+    member m 
+            join authority a 
+                on m.member_id = a.member_id;
+

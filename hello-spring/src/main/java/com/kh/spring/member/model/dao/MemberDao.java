@@ -17,5 +17,7 @@ public interface MemberDao {
 	Member selectOneMember(String memberId);
 
 	int updateMember(Member member);
+
+	int insertAuthority(Member member);
  
 }

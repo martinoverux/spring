@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,8 +39,7 @@
 				</div>
 				<!--로그인폼 -->
 				<!-- https://getbootstrap.com/docs/4.1/components/forms/#overview -->
-				<form
-					action="${pageContext.request.contextPath}/member/memberLogin.do"
+				<form:form
 					method="post">
 					<div class="modal-body">
 						<input 
@@ -54,7 +54,7 @@
 						<button type="submit" class="btn btn-outline-success">로그인</button>
 						<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
 					</div>
-				</form>
+				</form:form>
 			</div>
 		</div>
 	</div>

@@ -1,8 +1,10 @@
 package com.kh.spring.member.model.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import com.kh.spring.member.model.dto.Member;
 
-public interface MemberService {
+public interface MemberService  {
 
 	int memberEnroll(Member member);
 
