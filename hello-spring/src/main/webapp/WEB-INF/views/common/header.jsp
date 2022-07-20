@@ -57,7 +57,9 @@
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/demo/devList.do">Dev 목록</a>
                         </div>
 				    </li>
-				    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">회원관리</a></li>
+				    <sec:authorize access="hasRole('ADMIN')">
+					    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">회원관리</a></li>
+				    </sec:authorize>
 			    </ul>
 			    <sec:authorize access="isAuthenticated()">
 			    	<span>

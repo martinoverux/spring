@@ -263,5 +263,21 @@ select
 from
     member m 
             join authority a 
-                on m.member_id = a.member_id;
+                on m.member_id = a.member_id
+where
+    m.member_id = 'admin';
 
+select * from member;
+-- bcrypt 비밀번호 수정
+update member set password = '$2a$10$yGixdofbXZOAh1qCeB5Ruuo2yHUAx9xjwoao6tYT5PZ329T3FvQnO' where member_id = 'abcde';
+commit;
+
+-- rememberme table
+create table persistent_logins (
+        username varchar(64) not null, 
+        series varchar(64) primary key, 
+        token varchar(64) not null,  -- username, password, expiry time을 hashing 한 값
+        last_used timestamp not null
+);
+
+select * from persistent_logins;

@@ -1,5 +1,8 @@
 package com.kh.spring.member.model.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.spring.member.model.dto.Member;
@@ -19,5 +22,11 @@ public interface MemberDao {
 	int updateMember(Member member);
 
 	int insertAuthority(Member member);
+
+	List<Member> selectMemberList();
+
+	int deleteMemberRole(String memberId);
+
+	int insertAuthority(Map<String, Object> param);
  
 }

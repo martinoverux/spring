@@ -26,7 +26,7 @@
  		insert into
  			authority
  		values(
- 			#{memberId}, 'ROLE_USER')
+ 			#{memberId}, #{auth})
  	</insert>
  
  	<select id="selectOneMember" resultType="member">
@@ -68,4 +68,47 @@
  		where
  			member_id = #{memberId}
  	</update>
+ 	
+ 	
+
+ 	<select id="selectMemberList" resultMap="memberMap">
+		select
+    		*
+		from
+   			 member m 
+            	join authority a 
+                	on m.member_id = a.member_id
+        order by
+        	created_at desc
+	</select>
+	
+	<resultMap type="member" id="memberMap">
+		<id column="member_id" property="memberId" />
+		<result column="password" property="password"  />
+		<result column="name" property="name"  />
+		<result column="gender" property="gender"  />
+		<result column="birthday" property="birthday"  />
+		<result column="email" property="email"  />
+		<result column="phone" property="phone"  />
+		<result column="address" property="address"  />
+		<result column="hobby" property="hobby"  />
+		<result column="created_at" property="createdAt"  />
+		<result column="updated_at" property="updatedAt"  />
+		<result column="enabled" property="enabled"  />
+		<collection property="authorities" ofType="simpleGrantedAuthority" >
+			<constructor>
+				<arg column="auth" javaType="string" />
+			</constructor>
+		</collection>
+	</resultMap>
+	
+	
+	<delete id="deleteMemberRole">
+		delete from
+			authority
+		where
+			member_id = #{memberId}
+	</delete>
+	
+	
 </mapper>

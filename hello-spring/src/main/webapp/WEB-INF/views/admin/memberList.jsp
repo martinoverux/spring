@@ -1,4 +1,7 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@page import="java.util.List"%>
+<%@page import="org.springframework.security.core.authority.SimpleGrantedAuthority"%>
+<%@page import="com.kh.spring.member.model.dto.Member"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -7,75 +10,81 @@
 	<jsp:param value="회원관리" name="title"/>
 </jsp:include>
 <table class="table w-75 mx-auto">
-	<%-- <thead>
+	<thead>
 		<tr>
 		  <th scope="col">번호</th>
+		  <th scope="col">아이디</th>
 		  <th scope="col">이름</th>
-		  <th scope="col">경력</th>
-		  <th scope="col">이메일</th>
-		  <th scope="col">성별</th>
-		  <th scope="col">개발가능언어</th>
-		  <th scope="col">등록일시</th>
-		  <th scope="col">수정 | 삭제</th>
+		  <th scope="col">권한</th>
+		  <th scope="col">수정</th>
 		</tr>
 	</thead>
 	<tbody>
-		<c:if test="${empty list}">
-		<tr>
-			<td colspan="7">조회된 데이터가 없습니다.</td>
-		</tr>
-		</c:if>
-		<c:if test="${not empty list}">
-			<c:forEach items="${list}" var="dev" varStatus="vs">
-				<tr>
-					<td>${dev.no}</td>
-					<td>${dev.name}</td>
-					<td>${dev.career}</td>
-					<td>${dev.email}</td>
-					<td>${dev.gender}</td>
-					<td>
-						<c:forEach items="${dev.lang}" var="lang" varStatus="vs">
-								${lang}${not vs.last ? ', ' : ''}
-						</c:forEach>
-					</td>
-					<td>
-						<fmt:parseDate value="${dev.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt" />
-						<fmt:formatDate value="${createdAt}" pattern="yy-MM-dd HH:mm"/>
-					</td>
-									<td>
-					<button class="btn-update btn btn-sm btn-outline-secondary" value="${dev.no}">수정</button>
-					<button class="btn-delete btn btn-sm btn-outline-danger" data-dev-no="${dev.no}">삭제</button>
+		<c:forEach items="${list}" var="member" varStatus="vs">
+			<tr data-member-id="${member.memberId}">
+				<td>${vs.count}</td>
+				<td>${member.memberId}</td>
+				<td>${member.name}</td>
+				<td>
+					<% 
+						
+					%>
+					<input type="checkbox" name="authority" id="role-user-${vs.count}" value="ROLE_USER" <%= hasRole(pageContext, "ROLE_USER") ? "checked" : "" %>/>
+					<label for="role-user-${vs.count}">일반</label>
+					&nbsp;
+					<input type="checkbox" name="authority" id="role-admin-${vs.count}" value="ROLE_ADMIN" <%= hasRole(pageContext, "ROLE_ADMIN") ? "checked" : "" %>/>
+					<label for="role-admin-${vs.count}">관리자</label>
 				</td>
-				</tr>
-			</c:forEach>
-		</c:if>
+				<td>
+					<button type="button" class="btn btn-outline-primary btn-update-authority" value="${member.memberId}">수정</button>
+				</td>
+			</tr>
+		</c:forEach>
 	</tbody>
 </table>
-<form action="${pageContext.request.contextPath}/demo/deleteDev.do" name="devDelFrm" method="POST">
-	<input type="hidden" name="no" />
-</form>
 <script>
-/**
- * @실습문제 - Dev 삭제
- * - 삭제 후에는 목록페이지로 리다이렉트할 것
- */
-document.querySelectorAll(".btn-delete").forEach((btn) =>{
-	btn.addEventListener('click', (e) =>{
-		const frm = document.devDelFrm;
-		frm.no.value = e.target.dataset.devNo;
-		frm.submit();
-	});
-});
-
-/**
- * @실습문제 -Dev 수정
- * - GET /demo/updateDev.do 수정폼 요청
- * - POST /demo/updateDev.do db 수정 요청
- */
- document.querySelectorAll(".btn-update").forEach((btn) =>{
-		btn.addEventListener('click', (e) =>{
-			location.href = `${pageContext.request.contextPath}/demo/updateDev.do?no=\${e.target.value}`;
+document.querySelectorAll(".btn-update-authority").forEach((btn) => {
+	btn.addEventListener('click', (e) => {
+		const memberId = e.target.value;
+		console.log(memberId);
+		const tr = document.querySelector(`[data-member-id=\${memberId}]`);
+		const authorities = [...tr.querySelectorAll("[name=authority]:checked")].map((checkbox) => checkbox.value);
+		console.log(authorities);
+	
+		const headers = {
+				"${_csrf.headerName}" : "${_csrf.token}"
+		};
+		
+		const param = {
+				memberId,
+				authorities
+			};
+		$.ajax({
+			url : "${pageContext.request.contextPath}/admin/memberRoleUpdate.do",
+			method : "POST",
+			headers,
+			contentType: 'application/json; charset=utf-8',
+			data : JSON.stringify(param),
+			success(response){
+				console.log(response);
+				const {msg} = response;
+				alert(msg);
+				location.reload();
+			},
+			error: console.log
 		});
 	});
-</script> --%>
+});
+</script>
+<%!
+	/**
+	 * 메소드선언 -> servlet변환시에 메소드등록
+	 */
+	private boolean hasRole(PageContext pageContext, String role){
+		Member member = (Member) pageContext.getAttribute("member");
+		List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) member.getAuthorities();
+		return authorities.contains(new SimpleGrantedAuthority(role));
+	}
+
+%>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
