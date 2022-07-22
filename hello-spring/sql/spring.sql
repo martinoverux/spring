@@ -122,6 +122,8 @@ create table attachment (
     constraint fk_attachment_board_no foreign key(board_no) references board(no) on delete cascade
 );
 
+select * from attachment;
+
 create sequence seq_attachment_no;
 
 
@@ -256,7 +258,7 @@ insert into authority values ('sinsa', 'ROLE_USER');
 select * from authority;
 
 update authority set auth = 'ROLE_USER' where member_id = 'mrjeon';
-commit;
+commit;     
 
 select
     *
@@ -281,3 +283,20 @@ create table persistent_logins (
 );
 
 select * from persistent_logins;
+
+
+-- rest api
+-- 메뉴 기능
+create table menu (
+        id number,
+        restaurant varchar2(512) not null,
+        name varchar2(256) not null,
+        price number,
+        type varchar2(10) not null,
+        taste varchar2(10) not null,
+        constraint pk_menu_id primary key(id),
+        constraint uq_menu unique(restaurant, name, taste)
+);
+create sequence seq_menu_id;
+
+
